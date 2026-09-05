@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Studio Pro - Dashboard</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="dashboard-wrapper">
+    <!-- Top Navigation Bar -->
+    <header class="dash-navbar">
+      <div class="dash-brand">
+        <svg viewBox="0 0 24 24" class="dash-logo">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.86 4.46c1.69-1.69 2.14-4.2 2.14-6.49v-4.5a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.18-.56z"/>
+        </svg>
+        <div>
+          <div class="dash-title">
+            <span>TikTok Studio Pro</span>
+            <span class="dash-badge">v3.10.5</span>
+          </div>
+          <p class="dash-sub">Pusat kontrol antrean, jadwal & caption AI.</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="dash-top-actions">
+        <button type="button" class="btn-top-db" id="btnExportJsonTop" title="Export database JSON">
+          💾 Export JSON
+        </button>
+        <button type="button" class="btn-top-db" id="btnImportJsonTrigger" title="Import database JSON">
+          📥 Import JSON
+          <input type="file" id="fileImportJson" accept="application/json" style="display:none;">
+        </button>
+        <button type="button" class="btn-top-launch" id="btnLaunchStudio" title="Buka TikTok Studio">
+          🚀 Jalankan di TikTok Studio
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Layout with Tabs -->
+    <div class="dash-layout">
+      <!-- Sidebar Nav -->
+      <aside class="dash-sidebar">
+        <button class="nav-btn active" data-tab="queue">
+          <span class="nav-icon">🎬</span>
+          <div class="nav-text">
+            <span class="nav-title">Antrean Video</span>
+            <span class="nav-desc" id="navQueueCount">0 Video Siap</span>
+          </div>
+        </button>
+
+        <button class="nav-btn" data-tab="schedule">
+          <span class="nav-icon">⏰</span>
+          <div class="nav-text">
+            <span class="nav-title">Waktu Mulai</span>
+            <span class="nav-desc">Langsung / Tunda / Jam</span>
+          </div>
+        </button>
+
+        <button class="nav-btn" data-tab="history">
+          <span class="nav-icon">📜</span>
+          <div class="nav-text">
+            <span class="nav-title">Riwayat & Log</span>
+            <span class="nav-desc" id="navHistoryCount">0 Terposting</span>
+          </div>
+        </button>
+
+        <button class="nav-btn" data-tab="general">
+          <span class="nav-icon">⚙️</span>
+          <div class="nav-text">
+            <span class="nav-title">Pengaturan</span>
+            <span class="nav-desc">Visibilitas & Jeda</span>
+          </div>
+        </button>
+
+        <button class="nav-btn" data-tab="ai">
+          <span class="nav-icon">🤖</span>
+          <div class="nav-text">
+            <span class="nav-title">Gemini AI</span>
+            <span class="nav-desc" id="navAiKeysCount">92 Keys</span>
+          </div>
+        </button>
+      </aside>
+
+      <!-- Main Body View -->
+      <main class="dash-content">
+        <!-- TAB 1: QUEUE & CAPTIONS -->
+        <section id="tab-queue" class="dash-pane active">
+          <div class="pane-top-header">
+            <div>
+              <h2>Antrean & Caption Video</h2>
+              <p>Kelola video batch, jadwal berjenjang, dan sampul.</p>
+            </div>
+            <div class="pane-tools-row">
+              <button type="button" class="btn-action-tool" id="btnBatchCoverTrigger" title="Upload sampul massal">
+                🖼️ Sampul Massal
+                <input type="file" id="fileBatchCoverInput" multiple accept="image/png,image/jpeg,image/jpg,image/webp" style="display:none;">
+              </button>
+              <button type="button" class="btn-action-tool" id="btnAiGenAll">✨ AI Semua Caption</button>
+              <button type="button" class="btn-action-tool" id="btnCopyCaptionAll">📋 Samakan Caption</button>
+              <button type="button" class="btn-action-tool" id="btnCleanDoneVideos">🧹 Hapus Selesai</button>
+              <button type="button" class="btn-action-tool" id="btnResetAllStatus">🔄 Reset Status</button>
+              <button type="button" class="btn-action-tool" id="btnResetAllSchedule">🧹 Reset Jadwal</button>
+              <button type="button" class="btn-action-tool btn-danger" id="btnClearAllQueue">🗑️ Hapus Semua</button>
+            </div>
+          </div>
+
+          <!-- Mode Publikasi Segmented Control -->
+          <div class="post-mode-bar">
+            <span class="post-mode-label">Mode Publikasi:</span>
+            <div class="post-mode-toggle">
+              <button type="button" class="mode-btn active" id="btnModeNow">⚡ Langsung Post</button>
+              <button type="button" class="mode-btn" id="btnModeSchedule">📅 Jadwalkan Post</button>
+            </div>
+          </div>
+
+          <!-- Stagger Options Bar -->
+          <div class="stagger-bar" id="boxStaggerToolbar" style="display:none;">
+            <div class="stagger-group">
+              <label>📅 Tanggal:</label>
+              <input type="date" id="dashStartDate">
+            </div>
+            <div class="stagger-group">
+              <label>🕒 Jam Mulai:</label>
+              <input type="time" id="dashStartTime">
+            </div>
+            <div class="stagger-group">
+              <label>⏱️ Jeda Tiap Video:</label>
+              <select id="dashIntervalMinutes">
+                <option value="30">+30 Menit</option>
+                <option value="60">+1 Jam</option>
+                <option value="120" selected>+2 Jam</option>
+                <option value="180">+3 Jam</option>
+                <option value="240">+4 Jam</option>
+                <option value="360">+6 Jam</option>
+                <option value="720">+12 Jam</option>
+                <option value="1440">+1 Hari</option>
+              </select>
+            </div>
+            <button type="button" class="btn-apply-stagger" id="btnTriggerStagger">⚡ Terapkan Jadwal</button>
+          </div>
+
+          <!-- Upload Drop Zone -->
+          <div class="drop-zone" id="dashDropZone">
+            <input type="file" id="dashFileInput" multiple accept="video/mp4,video/quicktime,video/webm">
+            <div class="drop-zone-content">
+              <span class="drop-icon">📁</span>
+              <span class="drop-title">+ Klik atau Seret File Video ke Sini</span>
+              <span class="drop-sub">Mendukung format MP4, MOV, WEBM.</span>
+            </div>
+          </div>
+
+          <!-- Video Cards Summary & List -->
+          <div class="queue-summary-bar" id="dashQueueSummary" style="display:none;">
+            <span>Total Antrean: <b id="dashTotalVideoText">0</b> Video</span>
+            <span class="db-sync-badge" id="dashModeIndicatorText">● Mode: Langsung Post</span>
+          </div>
+
+          <div class="video-cards-container" id="dashCardsContainer"></div>
+        </section>
+
+        <!-- TAB 2: START TIME & SCHEDULING -->
+        <section id="tab-schedule" class="dash-pane">
+          <div class="pane-top-header">
+            <div>
+              <h2>Waktu Mulai Eksekusi</h2>
+              <p>Atur waktu bot mulai mengunggah.</p>
+            </div>
+            <div class="pane-tools-row">
+              <button type="button" class="btn-action-tool btn-danger" id="btnCancelActiveStartSchedule">✕ Batal Jadwal</button>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <h3>⏰ Pilihan Waktu Mulai</h3>
+            <div class="segmented-control" style="margin-top:10px;">
+              <button class="seg-btn active" id="segStartImmediate">⚡ Langsung</button>
+              <button class="seg-btn" id="segStartDelay">⏳ Tunda</button>
+              <button class="seg-btn" id="segStartSpecific">⏰ Jam Tertentu</button>
+            </div>
+
+            <!-- Option: Delay -->
+            <div id="boxStartDelay" class="form-row" style="display:none; margin-top:14px;">
+              <label>Tunda Selama:</label>
+              <select id="dashSelectDelayMinutes">
+                <option value="15">15 Menit</option>
+                <option value="30">30 Menit</option>
+                <option value="60" selected>1 Jam</option>
+                <option value="120">2 Jam</option>
+                <option value="180">3 Jam</option>
+                <option value="360">6 Jam</option>
+                <option value="720">12 Jam</option>
+              </select>
+            </div>
+
+            <!-- Option: Specific Time -->
+            <div id="boxStartSpecific" class="form-row" style="display:none; margin-top:14px;">
+              <label>Mulai Jam:</label>
+              <input type="time" id="dashInputSpecificTime" value="12:00">
+            </div>
+          </div>
+
+          <div class="card-box" style="margin-top:14px;">
+            <h3>🔄 Auto Catch-up</h3>
+            <div class="switch-item" style="margin-top:8px;">
+              <div>
+                <div class="switch-name">Mulai Otomatis Saat Chrome Dibuka</div>
+                <div class="switch-hint">Langsung eksekusi jika jadwal terlewat saat Chrome tertutup.</div>
+              </div>
+              <label class="toggle-ui">
+                <input type="checkbox" id="dashToggleCatchup" checked>
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: HISTORY & LOGS -->
+        <section id="tab-history" class="dash-pane">
+          <div class="pane-top-header">
+            <div>
+              <h2>Riwayat & Log</h2>
+              <p>Catatan riwayat upload dan log aktivitas.</p>
+            </div>
+            <div class="pane-tools-row">
+              <button type="button" class="btn-action-tool" id="btnExportHistoryJson">💾 Export JSON</button>
+              <button type="button" class="btn-action-tool" id="btnDownloadLogs">📥 Download Log</button>
+              <button type="button" class="btn-action-tool btn-danger" id="btnClearHistory">🗑️ Hapus Riwayat</button>
+              <button type="button" class="btn-action-tool btn-danger" id="btnClearDashboardLogs">🗑️ Hapus Log</button>
+            </div>
+          </div>
+
+          <!-- History Table Card -->
+          <div class="card-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <h3>📋 Riwayat (<span id="historyItemCountText">0</span>)</h3>
+              <input type="text" id="inputSearchHistory" placeholder="🔍 Cari..." style="padding:4px 8px; border:1px solid #CBD5E1; border-radius:6px; font-size:11px; width:180px;">
+            </div>
+
+            <div class="table-responsive">
+              <table class="dash-table" id="tableHistory">
+                <thead>
+                  <tr>
+                    <th style="width:40px;">No</th>
+                    <th style="width:120px;">Waktu</th>
+                    <th>Nama File</th>
+                    <th style="width:130px;">Mode</th>
+                    <th>Caption</th>
+                    <th style="width:90px;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyHistory">
+                  <tr>
+                    <td colspan="6" style="text-align:center; color:#94A3B8; padding:20px;">
+                      Belum ada riwayat postingan.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Logs Console -->
+          <div class="card-box" style="margin-top:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h3>📟 Console Log</h3>
+              <div style="display:flex; gap:4px;">
+                <button type="button" class="btn-filter-log active" data-filter="all">Semua</button>
+                <button type="button" class="btn-filter-log" data-filter="info">Info</button>
+                <button type="button" class="btn-filter-log" data-filter="success">Sukses</button>
+                <button type="button" class="btn-filter-log" data-filter="warn">Peringatan</button>
+              </div>
+            </div>
+            
+            <div class="dash-terminal" id="dashTerminalLogs"></div>
+          </div>
+        </section>
+
+        <!-- TAB 4: GENERAL SETTINGS -->
+        <section id="tab-general" class="dash-pane">
+          <div class="pane-top-header">
+            <div>
+              <h2>Pengaturan Upload</h2>
+              <p>Konfigurasi parameter upload.</p>
+            </div>
+            <div class="pane-tools-row">
+              <button type="button" class="btn-action-tool btn-danger" id="btnFactoryResetConfig">⚙️ Reset Default</button>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <div class="form-group-field">
+              <label>Visibilitas Postingan</label>
+              <select id="dashVisibility">
+                <option value="Public">Semua orang (Public)</option>
+                <option value="Friends">Teman (Friends)</option>
+                <option value="Private">Hanya saya (Private)</option>
+              </select>
+            </div>
+
+            <div class="form-group-field" style="margin-top:12px;">
+              <label>Jeda Antar Video (Detik)</label>
+              <input type="number" id="dashDelayBetween" min="3" max="120" value="6">
+            </div>
+
+            <div class="switch-item" style="margin-top:12px;">
+              <div>
+                <div class="switch-name">Auto Posting / Jadwalkan</div>
+                <div class="switch-hint">Klik tombol posting otomatis setelah 100%.</div>
+              </div>
+              <label class="toggle-ui">
+                <input type="checkbox" id="dashToggleAutoPost" checked>
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+            <div class="switch-item">
+              <div>
+                <div class="switch-name">Izinkan Komentar</div>
+                <div class="switch-hint">Buka kolom komentar video.</div>
+              </div>
+              <label class="toggle-ui">
+                <input type="checkbox" id="dashToggleComment" checked>
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+            <div class="switch-item">
+              <div>
+                <div class="switch-name">Izinkan Duet & Stitch</div>
+                <div class="switch-hint">Izinkan duet / stitch pengguna lain.</div>
+              </div>
+              <label class="toggle-ui">
+                <input type="checkbox" id="dashToggleDuet" checked>
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 5: GEMINI AI -->
+        <section id="tab-ai" class="dash-pane">
+          <div class="pane-top-header">
+            <div>
+              <h2>Gemini AI</h2>
+              <p>Pengaturan model & API Keys AI.</p>
+            </div>
+          </div>
+
+          <div class="card-box">
+            <div class="form-group-field">
+              <label>Model AI</label>
+              <select id="dashAiModel">
+                <option value="gemini-flash-lite-latest">gemini-flash-lite-latest (Cepat ~1s)</option>
+                <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+                <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite</option>
+              </select>
+            </div>
+
+            <div class="form-group-field" style="margin-top:12px;">
+              <label>Maksimal Hashtag</label>
+              <input type="number" id="dashMaxHashtags" min="1" max="10" value="5">
+            </div>
+
+            <div class="form-group-field" style="margin-top:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <label style="margin:0;">API Keys (<span id="dashApiKeyCountText">0</span>)</label>
+                <button type="button" class="btn-action-tool" id="btnTestKeySpeed">⚡ Tes Key</button>
+              </div>
+              <textarea id="dashApiKeysTextarea" rows="6" placeholder="Masukkan 1 API Key per baris..."></textarea>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Sticky Bottom Save Bar -->
+    <footer class="dash-footer">
+      <div class="footer-info">
+        <span class="footer-dot">●</span>
+        <span id="footerStatusText">Perubahan otomatis tersimpan ke Database.</span>
+      </div>
+      <div class="footer-actions">
+        <button type="button" class="btn-save-db" id="btnSaveDashboard">💾 Simpan</button>
+        <button type="button" class="btn-launch-bottom" id="btnLaunchBottom">🚀 Jalankan di TikTok Studio</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

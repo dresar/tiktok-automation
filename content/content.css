@@ -1,0 +1,930 @@
+/* ==========================================================================
+   TikTok Studio Auto Uploader Pro - All-In-One Unified In-Page Sidebar
+   Design System: Sleek Pro HUD, Minimalist Tabs, Glassmorphic SaaS Aesthetics
+   ========================================================================== */
+
+:host {
+  all: initial;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #0F172A;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------------------------
+   1. Floating Edge Toggle Tab
+   -------------------------------------------------------------------------- */
+#tt-sidebar-tab {
+  position: fixed;
+  top: 50%;
+  right: 400px;
+  transform: translateY(-50%);
+  background: #090D16;
+  color: #FFFFFF;
+  padding: 14px 8px;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -4px 6px 24px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-left: 3px solid #FE2C55;
+  transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease;
+  user-select: none;
+}
+
+#tt-sidebar-tab.collapsed {
+  right: 0;
+}
+
+#tt-sidebar-tab:hover {
+  background: #1E293B;
+  padding-left: 10px;
+}
+
+#tt-sidebar-tab svg {
+  width: 18px;
+  height: 18px;
+  fill: #FE2C55;
+}
+
+.tt-tab-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #FFFFFF;
+}
+
+.tt-tab-badge {
+  background: #FE2C55;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   2. Main Docked Sidebar (Resizable All-In-One Pro Panel)
+   -------------------------------------------------------------------------- */
+#tt-sidebar-dock {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  min-width: 340px;
+  max-width: 95vw;
+  height: 100vh;
+  background: #F8FAFC;
+  border-left: 1px solid #E2E8F0;
+  box-shadow: -12px 0 36px rgba(15, 23, 42, 0.15);
+  z-index: 2147483646;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateX(0);
+}
+
+#tt-sidebar-dock.collapsed {
+  transform: translateX(100%);
+}
+
+/* Left Border Drag-to-Resize Handle */
+.tt-resizer-handle {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 2147483647;
+  transition: background 0.15s ease;
+}
+
+.tt-resizer-handle:hover,
+.tt-resizer-handle.resizing {
+  background: rgba(254, 44, 85, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   3. Single-Line Top Header
+   -------------------------------------------------------------------------- */
+.tt-side-header {
+  padding: 10px 14px;
+  background: #090D16;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.tt-side-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tt-brand-logo {
+  width: 20px;
+  height: 20px;
+  fill: #FE2C55;
+  flex-shrink: 0;
+}
+
+.tt-brand-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #FFFFFF;
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+}
+
+.tt-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tt-btn-hdr {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tt-btn-hdr.tt-profile-tag {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10B981;
+  color: #A7F3D0;
+}
+
+.tt-btn-hdr.tt-profile-tag:hover {
+  background: #059669;
+  color: #FFFFFF;
+}
+
+.tt-btn-hdr:hover {
+  background: #FE2C55;
+  border-color: #FE2C55;
+}
+
+/* Active Step Progress Indicator on Card */
+.tt-active-step-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #DC2626;
+  animation: tt-border-glow 1.5s infinite alternate;
+}
+
+@keyframes tt-border-glow {
+  0% { box-shadow: 0 0 0 1px rgba(254, 44, 85, 0.2); }
+  100% { box-shadow: 0 0 0 3px rgba(254, 44, 85, 0.4); }
+}
+
+.tt-step-pulse {
+  width: 7px;
+  height: 7px;
+  background: #FE2C55;
+  border-radius: 50%;
+  animation: tt-pulse-anim 1s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes tt-pulse-anim {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.7; }
+}
+
+.tt-step-indicator {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-btn-close-dock {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.15s ease;
+}
+
+.tt-btn-close-dock:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+}
+
+/* --------------------------------------------------------------------------
+   4. Minimalist Tab Navigation Bar
+   -------------------------------------------------------------------------- */
+.tt-nav-tabs {
+  display: flex;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 6px 10px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.tt-tab-btn {
+  flex: 1;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 6px 4px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.tt-tab-btn.active {
+  background: #FE2C55;
+  color: #FFFFFF;
+  border-color: #FE2C55;
+  box-shadow: 0 2px 6px rgba(254, 44, 85, 0.3);
+}
+
+.tt-tab-btn:hover:not(.active) {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+/* --------------------------------------------------------------------------
+   5. Body Scrollable Content & Panes
+   -------------------------------------------------------------------------- */
+.tt-side-body {
+  flex: 1;
+  padding: 12px 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tt-side-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.tt-side-body::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.tt-pane {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tt-pane.active {
+  display: flex;
+}
+
+/* --------------------------------------------------------------------------
+   6. Tools & Action Toolbar
+   -------------------------------------------------------------------------- */
+.tt-tools-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tt-btn-tool {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tt-btn-tool:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  color: #0F172A;
+}
+
+.tt-btn-tool.danger {
+  color: #DC2626;
+  border-color: #FECACA;
+  background: #FFF5F5;
+}
+
+.tt-btn-tool.danger:hover {
+  background: #FEE2E2;
+  border-color: #F87171;
+}
+
+/* --------------------------------------------------------------------------
+   7. Post Mode Bar (Segmented Control)
+   -------------------------------------------------------------------------- */
+.tt-post-mode-bar {
+  display: flex;
+  background: #E2E8F0;
+  padding: 3px;
+  border-radius: 7px;
+  gap: 3px;
+}
+
+.tt-mode-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tt-mode-btn.active {
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   8. Stagger Toolbar
+   -------------------------------------------------------------------------- */
+.tt-stagger-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tt-stagger-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.tt-stagger-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tt-stagger-item label {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.tt-stagger-item input,
+.tt-stagger-item select {
+  padding: 4px 6px;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  font-size: 10.5px;
+  background: #FFFFFF;
+  color: #0F172A;
+}
+
+.tt-btn-apply-stagger {
+  background: #0F172A;
+  color: #FFFFFF;
+  border: none;
+  padding: 6px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: opacity 0.15s;
+}
+
+.tt-btn-apply-stagger:hover {
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   9. Direct Drop Zone
+   -------------------------------------------------------------------------- */
+.tt-drop-zone {
+  border: 1.5px dashed #94A3B8;
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.tt-drop-zone:hover {
+  border-color: #FE2C55;
+  background: #FFF9FA;
+}
+
+.tt-drop-zone input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tt-drop-title {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #1E293B;
+  display: block;
+}
+
+.tt-drop-sub {
+  font-size: 10px;
+  color: #64748B;
+  display: block;
+  margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   10. Interactive Video Card List
+   -------------------------------------------------------------------------- */
+.tt-queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.tt-queue-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tt-queue-list::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+.tt-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.tt-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.tt-card.active {
+  border-color: #FE2C55;
+  background: #FFF9FA;
+  box-shadow: 0 0 0 1px #FE2C55;
+}
+
+.tt-card.done {
+  border-color: #10B981;
+  background: #F0FDF4;
+}
+
+.tt-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.tt-card-title-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.tt-card-index {
+  background: #F1F5F9;
+  color: #475569;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.tt-card-filename {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-card-actions-top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.tt-status-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.tt-pill-wait { background: #F1F5F9; color: #64748B; border: 1px solid #E2E8F0; }
+.tt-pill-proc { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+.tt-pill-done { background: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
+.tt-pill-warn { background: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; }
+.tt-pill-err { background: #FEF2F2; color: #DC2626; border: 1px solid #FECACA; }
+
+.tt-btn-del-card {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+.tt-btn-del-card:hover {
+  color: #DC2626;
+}
+
+/* Schedule row in card */
+.tt-card-sched-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #F8FAFC;
+  padding: 5px 6px;
+  border-radius: 5px;
+  border: 1px solid #E2E8F0;
+}
+
+.tt-card-sched-row input {
+  padding: 3px 5px;
+  border: 1px solid #CBD5E1;
+  border-radius: 4px;
+  font-size: 10px;
+  background: #FFFFFF;
+}
+
+/* Cover Row */
+.tt-card-cover-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.tt-cover-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tt-cover-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 1px solid #CBD5E1;
+}
+
+.tt-btn-cover-select {
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Caption Area */
+.tt-card-caption-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tt-caption-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tt-caption-head label {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.tt-btn-single-ai {
+  background: #F3E8FF;
+  border: 1px solid #D8B4FE;
+  color: #7E22CE;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tt-btn-single-ai:hover {
+  background: #E9D5FF;
+}
+
+.tt-caption-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 6px;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-family: inherit;
+  resize: vertical;
+  line-height: 1.35;
+}
+
+.tt-caption-textarea:focus {
+  outline: none;
+  border-color: #FE2C55;
+}
+
+/* --------------------------------------------------------------------------
+   11. Settings & Form Styles
+   -------------------------------------------------------------------------- */
+.tt-card-box {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tt-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tt-form-field label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.tt-form-field input,
+.tt-form-field select,
+.tt-form-field textarea {
+  padding: 6px 8px;
+  border: 1px solid #CBD5E1;
+  border-radius: 5px;
+  font-size: 11px;
+  font-family: inherit;
+  background: #FFFFFF;
+}
+
+.tt-switch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.tt-switch-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.tt-switch-sub {
+  font-size: 9.5px;
+  color: #64748B;
+}
+
+/* --------------------------------------------------------------------------
+   12. Live Status Bar & Console Terminal
+   -------------------------------------------------------------------------- */
+.tt-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 7px;
+  font-size: 11px;
+  color: #334155;
+  font-weight: 600;
+}
+
+.tt-pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tt-status-bar.active .tt-pulse-dot {
+  background: #FE2C55;
+  animation: tt-pulse 1.2s infinite;
+}
+
+@keyframes tt-pulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+#tt-status-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tt-log-terminal {
+  background: #090D16;
+  color: #E2E8F0;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9.5px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #1E293B;
+}
+
+.tt-log-header {
+  background: #0F172A;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 9px;
+  color: #64748B;
+  border-bottom: 1px solid #1E293B;
+}
+
+.tt-log-body {
+  padding: 8px 10px;
+  max-height: 80px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.4;
+}
+
+.tt-log-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.tt-log-body::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.tt-log-entry {
+  display: flex;
+  gap: 5px;
+  word-break: break-word;
+}
+
+.tt-log-time { color: #475569; flex-shrink: 0; }
+.tt-log-info { color: #CBD5E1; }
+.tt-log-success { color: #34D399; font-weight: 600; }
+.tt-log-warn { color: #FBBF24; }
+.tt-log-error { color: #F87171; font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   13. Sticky Action Footer
+   -------------------------------------------------------------------------- */
+.tt-side-footer {
+  padding: 10px 14px;
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tt-btn-action {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.tt-btn-start {
+  background: linear-gradient(135deg, #FE2C55 0%, #E01E47 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(254, 44, 85, 0.4);
+}
+
+.tt-btn-start:hover {
+  background: linear-gradient(135deg, #FF3B62 0%, #D4143D 100%);
+  box-shadow: 0 6px 18px rgba(254, 44, 85, 0.5);
+  transform: translateY(-1px);
+}
+
+.tt-btn-start:active {
+  transform: translateY(0);
+}
+
+.tt-btn-start:disabled {
+  background: #E2E8F0;
+  color: #94A3B8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.tt-btn-stop {
+  background: #EF4444;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.tt-btn-stop:hover {
+  background: #DC2626;
+}
